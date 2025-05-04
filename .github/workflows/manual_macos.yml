@@ -90,6 +90,7 @@ jobs:
         ls -lR "${DIST_DIR}"
         
         cd "${DIST_DIR}"
+        rm -rf "./LinguaGacha"
         zip -ry "../${ARCHIVE_NAME}" .
         cd ..
         echo "ARCHIVE_PATH=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
