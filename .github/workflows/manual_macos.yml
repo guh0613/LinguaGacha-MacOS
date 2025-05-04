@@ -9,7 +9,7 @@ env:
   
 jobs:
   build-macos-arm64:
-    runs-on: macos-14
+    runs-on: macos-15
     permissions:
       actions: write
       checks: write
@@ -28,7 +28,7 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: 3.13
-        # architecture: 'arm64'
+        architecture: 'arm64'
 
     - name: Checkout Repository
       uses: actions/checkout@v4
