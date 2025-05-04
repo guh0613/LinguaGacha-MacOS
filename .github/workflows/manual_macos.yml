@@ -1,0 +1,116 @@
+name: Manual Build macOS arm64
+
+on:
+  workflow_dispatch:
+  
+env:
+  APP_NAME: LinguaGacha
+  DIST_DIR: dist
+  
+jobs:
+  build-macos-arm64:
+    runs-on: macos-14
+    permissions:
+      actions: write
+      checks: write
+      contents: write
+      deployments: write
+      issues: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+
+    steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+        # architecture: 'arm64'
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Check Version
+      id: check_version
+      shell: bash
+      run: |
+        version=$(cat version.txt)
+        echo "Read version: $version"
+        echo "version=${version}" >> $GITHUB_OUTPUT
+
+    - name: Install Requirements
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade setuptools
+        python -m pip install pyinstaller
+        python -m pip install -U -r requirements.txt
+        python -m pip cache purge
+
+    - name: Build App Bundle
+      shell: bash
+      run: |
+        python ./resource/pyinstaller.py
+
+    - name: Copy Files Alongside App Bundle
+      shell: bash
+      run: |
+        echo "Copying resources and version file to ${DIST_DIR}/ alongside the .app"
+        # 确保 dist 目录存在 (PyInstaller 应该已经创建)
+        if [ ! -d "${DIST_DIR}" ]; then
+          echo "Error: Dist directory '${DIST_DIR}' not found after build."
+          exit 1
+        fi
+        # 创建 dist/resource 目录用于存放资源
+        mkdir -p "${DIST_DIR}/resource"
+        # 复制 version.txt 到 dist 目录
+        cp "./version.txt" "${DIST_DIR}/"
+        cp -R "./resource/prompt/" "${DIST_DIR}/resource/prompt/"
+        cp -R "./resource/platforms/" "${DIST_DIR}/resource/platforms/"
+        cp -R "./resource/custom_prompt/" "${DIST_DIR}/resource/custom_prompt/"
+        cp -R "./resource/glossary_preset/" "${DIST_DIR}/resource/glossary_preset/"
+        cp -R "./resource/pre_translation_replacement_preset/" "${DIST_DIR}/resource/pre_translation_replacement_preset/"
+        cp -R "./resource/post_translation_replacement_preset/" "${DIST_DIR}/resource/post_translation_replacement_preset/"
+        cp "./resource/icon_full.png" "${DIST_DIR}/resource/"
+        cp "./resource/icon_no_bg.png" "${DIST_DIR}/resource/"
+        
+    - name: Compress Archive
+      id: compress
+      shell: bash
+      run: |
+        # 定义压缩包名称
+        ARCHIVE_NAME="${APP_NAME}_macOS_arm64_${{ steps.check_version.outputs.version }}.zip"
+        echo "Creating archive: ${ARCHIVE_NAME}"
+        # 进入 dist 目录，然后压缩该目录下的 *所有内容*
+        # 这将使得解压 zip 文件后，用户直接看到 .app 文件, resource 目录, version.txt
+        echo "Contents of ${DIST_DIR} before zipping:"
+        ls -lR "${DIST_DIR}"
+        
+        cd "${DIST_DIR}"
+        zip -ry "../${ARCHIVE_NAME}" .
+        cd ..
+        echo "ARCHIVE_PATH=${ARCHIVE_NAME}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: MANUAL_BUILD_${{ steps.check_version.outputs.version }}
+        release_name: LinguaGacha_${{ steps.check_version.outputs.version }}
+        draft: true
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ steps.compress.outputs.ARCHIVE_PATH }}
+        asset_name: ${{ steps.compress.outputs.ARCHIVE_PATH }}
+        asset_content_type: application/zip
