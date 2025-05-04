@@ -29,8 +29,7 @@ if sys.platform == "darwin": # macOS
     else:
         print(f"WARNING: '{icon_file}' not found. Application will have a default icon.")
     # 添加hook
-    cmd.append("--runtime-hook")
-    cmd.append("./hook.py")
+    cmd.append("--runtime-hook=./hook.py")
 
 elif sys.platform == "win32": # Windows
     print("Detected Windows platform.")
