@@ -4,15 +4,16 @@ import PyInstaller.__main__
 
 # --- 配置 ---
 APP_NAME = "LinguaGacha"
-ENTRY_SCRIPT = "./app.py"
-RESOURCE_DIR = "./resource"
-DIST_PATH = "./dist"
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ENTRY_SCRIPT = os.path.join(PROJECT_ROOT, "app.py")
+RESOURCE_DIR = os.path.dirname(os.path.abspath(__file__)) # This is project_root/resource
+DIST_PATH = "./dist" # This is relative to CWD, typically project_root
 
 # --- 参数列表 ---
 cmd = [
     ENTRY_SCRIPT,
-    "--name", APP_NAME, 
-    "--clean",          
+    "--name", APP_NAME,
+    "--clean",
     "--noconfirm",      
     f"--distpath={DIST_PATH}", 
     "--windowed",
@@ -29,7 +30,7 @@ if sys.platform == "darwin": # macOS
     else:
         print(f"WARNING: '{icon_file}' not found. Application will have a default icon.")
     # 添加hook
-    cmd.append("--runtime-hook=./hook.py")
+    cmd.append(f"--runtime-hook={os.path.join(PROJECT_ROOT, 'hook.py')}")
 
 elif sys.platform == "win32": # Windows
     print("Detected Windows platform.")
@@ -44,7 +45,7 @@ else:
     print(f"Detected other platform: {sys.platform}. Using default settings.")
 
 # --- 处理隐藏导入 ---
-requirements_file = "./requirements.txt"
+requirements_file = os.path.join(PROJECT_ROOT, "requirements.txt")
 print(f"Checking for hidden imports in '{requirements_file}'...")
 if os.path.exists(requirements_file):
     added_hidden = 0

@@ -232,10 +232,12 @@ class TextReplacementPage(QWidget, Base):
 
         def load_preset() -> list[str]:
             filenames: list[str] = []
+            preset_dir = os.path.join(Config.APP_ROOT, "resource", f"{self.base_key}_preset", Localizer.get_app_language().lower())
 
             try:
-                for _, _, filenames in os.walk(f"resource/{self.base_key}_preset/{Localizer.get_app_language().lower()}"):
-                    filenames = [v.lower().removesuffix(".json") for v in filenames if v.lower().endswith(".json")]
+                for _, _, files_in_dir in os.walk(preset_dir):
+                    filenames = [v.lower().removesuffix(".json") for v in files_in_dir if v.lower().endswith(".json")]
+                    break # We only want files directly in preset_dir
             except Exception:
                 pass
 
@@ -266,7 +268,8 @@ class TextReplacementPage(QWidget, Base):
             })
 
         def apply_preset(filename: str) -> None:
-            path: str = f"resource/{self.base_key}_preset/{Localizer.get_app_language().lower()}/{filename}.json"
+            preset_dir = os.path.join(Config.APP_ROOT, "resource", f"{self.base_key}_preset", Localizer.get_app_language().lower())
+            path: str = os.path.join(preset_dir, f"{filename}.json")
 
             # 从文件加载数据
             data = self.table_manager.get_data()

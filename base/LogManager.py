@@ -4,17 +4,21 @@ import traceback
 from logging.handlers import TimedRotatingFileHandler
 
 from rich.logging import RichHandler
+from module.Config import Config
 
 class LogManager():
 
+    # Define log directory relative to APP_ROOT
+    LOG_DIR = os.path.join(Config.APP_ROOT, "log")
+    os.makedirs(LOG_DIR, exist_ok=True)
+
     # 文件日志实例
-    os.makedirs("./log", exist_ok = True)
     LOGGER_FILE = logging.getLogger("linguagacha_file")
     LOGGER_FILE.propagate = False
     LOGGER_FILE.setLevel(logging.DEBUG)
     LOGGER_FILE.addHandler(
         TimedRotatingFileHandler(
-            "./log/app.log",
+            os.path.join(LOG_DIR, "app.log"),
             when = "midnight",
             interval = 1,
             encoding = "utf-8",
@@ -43,7 +47,7 @@ class LogManager():
     @classmethod
     def is_expert_mode(cls) -> bool:
         if getattr(cls, "expert_mode", None) is None:
-            from module.Config import Config
+            # Config is already imported at the module level
             cls.expert_mode = Config().load().expert_mode
             cls.LOGGER_CONSOLE.setLevel(logging.DEBUG if cls.expert_mode else logging.INFO)
 

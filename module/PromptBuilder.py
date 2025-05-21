@@ -1,3 +1,4 @@
+import os
 import json
 
 from base.Base import Base
@@ -15,28 +16,32 @@ class PromptBuilder(Base):
 
     def get_base(self, language: BaseLanguage.Enum) -> str:
         if getattr(self, "base", None) is None:
-            with open(f"resource/prompt/{language.lower()}/base.txt", "r", encoding = "utf-8-sig") as reader:
+            path = os.path.join(Config.APP_ROOT, "resource", "prompt", language.lower(), "base.txt")
+            with open(path, "r", encoding = "utf-8-sig") as reader:
                 self.base = reader.read().strip()
 
         return self.base
 
     def get_prefix(self, language: BaseLanguage.Enum) -> str:
         if getattr(self, "prefix", None) is None:
-            with open(f"resource/prompt/{language.lower()}/prefix.txt", "r", encoding = "utf-8-sig") as reader:
+            path = os.path.join(Config.APP_ROOT, "resource", "prompt", language.lower(), "prefix.txt")
+            with open(path, "r", encoding = "utf-8-sig") as reader:
                 self.prefix = reader.read().strip()
 
         return self.prefix
 
     def get_suffix(self, language: BaseLanguage.Enum) -> str:
         if getattr(self, "suffix", None) is None:
-            with open(f"resource/prompt/{language.lower()}/suffix.txt", "r", encoding = "utf-8-sig") as reader:
+            path = os.path.join(Config.APP_ROOT, "resource", "prompt", language.lower(), "suffix.txt")
+            with open(path, "r", encoding = "utf-8-sig") as reader:
                 self.suffix = reader.read().strip()
 
         return self.suffix
 
     def get_suffix_glossary(self, language: BaseLanguage.Enum) -> str:
         if getattr(self, "suffix_glossary", None) is None:
-            with open(f"resource/prompt/{language.lower()}/suffix_glossary.txt", "r", encoding = "utf-8-sig") as reader:
+            path = os.path.join(Config.APP_ROOT, "resource", "prompt", language.lower(), "suffix_glossary.txt")
+            with open(path, "r", encoding = "utf-8-sig") as reader:
                 self.suffix_glossary = reader.read().strip()
 
         return self.suffix_glossary

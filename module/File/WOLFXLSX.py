@@ -48,10 +48,11 @@ class WOLFXLSX(Base):
         for abs_path in abs_paths:
             # 获取相对路径
             rel_path = os.path.relpath(abs_path, self.input_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
 
             # 将原始文件复制一份
-            os.makedirs(os.path.dirname(f"{self.output_path}/cache/temp/{rel_path}"), exist_ok = True)
-            shutil.copy(abs_path, f"{self.output_path}/cache/temp/{rel_path}")
+            os.makedirs(os.path.dirname(temp_cache_file), exist_ok = True)
+            shutil.copy(abs_path, temp_cache_file)
 
             # 数据处理
             book: openpyxl.Workbook = openpyxl.load_workbook(abs_path)
@@ -151,7 +152,7 @@ class WOLFXLSX(Base):
                 TableManager.set_cell_value(sheet, row, column = 7, value = item.get_dst())
 
             # 保存工作簿
-            abs_path = f"{self.output_path}/{rel_path}"
+            abs_path = os.path.join(self.output_path, rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             book.save(abs_path)
 

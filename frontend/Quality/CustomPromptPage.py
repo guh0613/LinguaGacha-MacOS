@@ -32,11 +32,11 @@ class CustomPromptPage(QWidget, Base):
         if language == BaseLanguage.Enum.ZH:
             self.language = language
             self.base_key = "custom_prompt_zh"
-            self.preset_path = "resource/custom_prompt/zh"
+            self.preset_path = os.path.join(Config.APP_ROOT, "resource", "custom_prompt", "zh")
         else:
             self.language = language
             self.base_key = "custom_prompt_en"
-            self.preset_path = "resource/custom_prompt/en"
+            self.preset_path = os.path.join(Config.APP_ROOT, "resource", "custom_prompt", "en")
 
         # 载入并保存默认配置
         config = Config().load()
@@ -127,8 +127,10 @@ class CustomPromptPage(QWidget, Base):
             filenames: list[str] = []
 
             try:
-                for root, _, filenames in os.walk(f"{self.preset_path}"):
-                    filenames = [v.lower().removesuffix(".txt") for v in filenames if v.lower().endswith(".txt")]
+                # os.walk expects a directory path. self.preset_path is already the full directory path.
+                for root, _, files_in_dir in os.walk(self.preset_path): 
+                    filenames = [v.lower().removesuffix(".txt") for v in files_in_dir if v.lower().endswith(".txt")]
+                    break # We only want files directly in self.preset_path
             except Exception:
                 pass
 
@@ -159,7 +161,7 @@ class CustomPromptPage(QWidget, Base):
             })
 
         def apply_preset(filename: str) -> None:
-            path: str = f"{self.preset_path}/{filename}.txt"
+            path: str = os.path.join(self.preset_path, f"{filename}.txt")
 
             prompt: str = ""
             try:

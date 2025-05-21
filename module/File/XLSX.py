@@ -119,7 +119,7 @@ class XLSX(Base):
                 TableManager.set_cell_value(sheet, row, column = 2, value = item.get_dst())
 
             # 保存工作簿
-            abs_path = f"{self.output_path}/{rel_path}"
+            abs_path = os.path.join(self.output_path, rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             book.save(abs_path)
 

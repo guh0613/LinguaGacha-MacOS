@@ -129,7 +129,7 @@ class ASS(Base):
                     line = line.replace("{{CONTENT}}", item.get_dst().replace("\n", "\\N"), 1)
                     result.append(line)
 
-            abs_path = f"{self.output_path}/{Localizer.get().path_bilingual}/{rel_path}"
+            abs_path = os.path.join(self.output_path, Localizer.get().path_bilingual, rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             with open(self.insert_source_target(abs_path), "w", encoding = "utf-8") as writer:
                 writer.write("\n".join(result))

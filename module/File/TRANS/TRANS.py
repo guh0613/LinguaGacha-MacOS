@@ -31,10 +31,11 @@ class TRANS(Base):
         for abs_path in abs_paths:
             # 获取相对路径
             rel_path = os.path.relpath(abs_path, self.input_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
 
             # 将原始文件复制一份
-            os.makedirs(os.path.dirname(f"{self.output_path}/cache/temp/{rel_path}"), exist_ok = True)
-            shutil.copy(abs_path, f"{self.output_path}/cache/temp/{rel_path}")
+            os.makedirs(os.path.dirname(temp_cache_file), exist_ok = True)
+            shutil.copy(abs_path, temp_cache_file)
 
             # 数据处理
             with open(abs_path, "r", encoding = "utf-8-sig") as reader:
@@ -121,11 +122,12 @@ class TRANS(Base):
             items = sorted(items, key = lambda x: x.get_row())
 
             # 数据处理
-            abs_path = f"{self.output_path}/{rel_path}"
+            abs_path = os.path.join(self.output_path, rel_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
 
             with open(abs_path, "w", encoding = "utf-8") as writer:
-                with open(f"{self.output_path}/cache/temp/{rel_path}", "r", encoding = "utf-8-sig") as reader:
+                with open(temp_cache_file, "r", encoding = "utf-8-sig") as reader:
                     json_data = json.load(reader)
 
                     # 有效性校验

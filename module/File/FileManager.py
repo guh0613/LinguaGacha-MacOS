@@ -41,7 +41,7 @@ class FileManager(Base):
                 paths = [input_folder]
             elif os.path.isdir(input_folder):
                 for root, _, files in os.walk(input_folder):
-                    paths.extend([f"{root}/{file}".replace("\\", "/") for file in files])
+                    paths.extend([os.path.join(root, file) for file in files])
 
             items.extend(MD(self.config).read_from_path([path for path in paths if path.lower().endswith(".md")]))
             items.extend(TXT(self.config).read_from_path([path for path in paths if path.lower().endswith(".txt")]))

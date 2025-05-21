@@ -47,10 +47,11 @@ class EPUB(Base):
         for abs_path in abs_paths:
             # 获取相对路径
             rel_path = os.path.relpath(abs_path, self.input_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
 
             # 将原始文件复制一份
-            os.makedirs(os.path.dirname(f"{self.output_path}/cache/temp/{rel_path}"), exist_ok = True)
-            shutil.copy(abs_path, f"{self.output_path}/cache/temp/{rel_path}")
+            os.makedirs(os.path.dirname(temp_cache_file), exist_ok = True)
+            shutil.copy(abs_path, temp_cache_file)
 
             # 数据处理
             with zipfile.ZipFile(abs_path, "r") as zip_reader:
@@ -196,10 +197,11 @@ class EPUB(Base):
             items = sorted(items, key = lambda x: x.get_row())
 
             # 数据处理
-            abs_path = f"{self.output_path}/{rel_path}"
+            abs_path = os.path.join(self.output_path, rel_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             with zipfile.ZipFile(self.insert_target(abs_path), "w") as zip_writer:
-                with zipfile.ZipFile(f"{self.output_path}/cache/temp/{rel_path}", "r") as zip_reader:
+                with zipfile.ZipFile(temp_cache_file, "r") as zip_reader:
                     for path in zip_reader.namelist():
                         if path.lower().endswith(".css"):
                             process_css(zip_reader, path)
@@ -218,10 +220,11 @@ class EPUB(Base):
             items = sorted(items, key = lambda x: x.get_row())
 
             # 数据处理
-            abs_path = f"{self.output_path}/{Localizer.get().path_bilingual}/{rel_path}"
+            abs_path = os.path.join(self.output_path, Localizer.get().path_bilingual, rel_path)
+            temp_cache_file = os.path.join(self.output_path, "cache", "temp", rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             with zipfile.ZipFile(self.insert_source_target(abs_path), "w") as zip_writer:
-                with zipfile.ZipFile(f"{self.output_path}/cache/temp/{rel_path}", "r") as zip_reader:
+                with zipfile.ZipFile(temp_cache_file, "r") as zip_reader:
                     for path in zip_reader.namelist():
                         if path.lower().endswith(".css"):
                             process_css(zip_reader, path)

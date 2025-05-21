@@ -302,7 +302,7 @@ class AppFluentWindow(FluentWindow, Base):
         # 项目主页按钮
         self.home_page_widget = NavigationAvatarWidget(
             "⭐️ @ Github",
-            "resource/icon_full.png",
+            os.path.join(Config.APP_ROOT, "resource", "icon_full.png"),
         )
         self.navigationInterface.addWidget(
             routeKey = "avatar_navigation_widget",

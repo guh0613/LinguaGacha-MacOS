@@ -10,8 +10,11 @@ from module.Localizer.Localizer import Localizer
 
 class Config(BaseData):
 
+    # Application root directory
+    APP_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
     # 路径
-    CONFIG_PATH = "./resource/config.json"
+    CONFIG_PATH = os.path.join(APP_ROOT, "resource", "config.json")
 
     # 配置锁
     CONFIG_LOCK = threading.Lock()
@@ -51,8 +54,8 @@ class Config(BaseData):
         # ProjectPage
         self.source_language: BaseLanguage.Enum = BaseLanguage.Enum.JA
         self.target_language: BaseLanguage.Enum = BaseLanguage.Enum.ZH
-        self.input_folder: str = "./input"
-        self.output_folder: str = "./output"
+        self.input_folder: str = os.path.join(__class__.APP_ROOT, "input")
+        self.output_folder: str = os.path.join(__class__.APP_ROOT, "output")
         self.output_folder_open_on_finish: bool = False
         self.traditional_chinese_enable: bool = False
 

@@ -66,7 +66,7 @@ if __name__ == "__main__":
     config = Config().load()
 
     # 加载版本号
-    with open("version.txt", "r", encoding="utf-8-sig") as reader:
+    with open(os.path.join(Config.APP_ROOT, "version.txt"), "r", encoding="utf-8-sig") as reader:
         version = reader.read().strip()
 
     # 设置主题
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # 设置应用图标
-    app.setWindowIcon(QIcon("resource/icon_no_bg.png"))
+    app.setWindowIcon(QIcon(os.path.join(Config.APP_ROOT, "resource", "icon_no_bg.png")))
 
     # 设置全局字体属性，解决狗牙问题
     font = QFont()

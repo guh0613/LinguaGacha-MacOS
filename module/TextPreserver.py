@@ -1,3 +1,4 @@
+import os
 import re
 import json
 
@@ -40,7 +41,7 @@ class TextPreserver(Base):
         if custom_enable == True:
             result = self.config.text_preserve_data
         else:
-            path: str = f"./resource/text_preserve_preset/{Localizer.get_app_language().lower()}/{text_type.lower()}.json"
+            path: str = os.path.join(Config.APP_ROOT, "resource", "text_preserve_preset", Localizer.get_app_language().lower(), f"{text_type.lower()}.json")
             try:
                 with open(path, "r", encoding = "utf-8-sig") as reader:
                     result: list[dict[str, str]] = json.load(reader)

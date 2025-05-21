@@ -76,7 +76,7 @@ class TXT(Base):
 
         # 分别处理每个文件（双语）
         for rel_path, items in group.items():
-            abs_path = f"{self.output_path}/{Localizer.get().path_bilingual}/{rel_path}"
+            abs_path = os.path.join(self.output_path, Localizer.get().path_bilingual, rel_path)
             os.makedirs(os.path.dirname(abs_path), exist_ok = True)
             with open(self.insert_source_target(abs_path), "w", encoding = "utf-8") as writer:
                 result: list[str] = []
