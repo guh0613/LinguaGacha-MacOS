@@ -18,6 +18,8 @@ class LocalizerEN(LocalizerZH):
     add: str = "Add"
     edit: str = "Edit"
     none: str = "None"
+    back: str = "Back"
+    next: str = "Next"
     stop: str = "Stop"
     start: str = "Start"
     timer: str = "Timer"
@@ -26,24 +28,22 @@ class LocalizerEN(LocalizerZH):
     warning: str = "Warning"
     confirm: str = "Confirm"
     cancel: str = "Cancel"
-    enable: str = "Enable"
-    disable: str = "Disable"
     auto: str = "Auto"
     wiki: str = "Wiki"
     open: str = "Open"
     select: str = "Select"
     inject: str = "Inject"
     filter: str = "Filter"
+    search: str = "Search"
     generate: str = "Generate"
+    placeholder: str = "Please enter keywords …"
     task_success: str = "Task succeeded …"
-    task_failure: str = "Task failed …"
     alert_no_data: str = "No valid data …"
     alert_reset_timer: str = "Confirm to reset timer?"
     alert_reset_translation: str = "Confirm to reset translation task and start a new task?"
 
     # 主页面
     app_close_message_box: str = "Are you sure you want to exit the application … ?"
-    app_close_message_box_msg: str = "The main window is closed, the application will automatically exit later …"
     app_new_version: str = "Download New Version!"
     app_new_version_toast: str = "New version found, version: {VERSION}. Please click the button on the bottom left to download and update …"
     app_new_version_update: str = "Downloading {PERCENT} …"
@@ -279,7 +279,7 @@ class LocalizerEN(LocalizerZH):
     expert_settings_page_preceding_disable_on_local_desc: str = "Local models perform relatively poorly, so the preceding Lines feature often has negative effects, disabled by default"
     expert_settings_page_deduplication_in_bilingual: str = "Deduplicate Lines in Bilingual Output"
     expert_settings_page_deduplication_in_bilingual_desc: str = "Whether to deduplicate when the source text and translated text are identical in bilingual output files, enabled by default"
-    expert_settings_page_write_translated_name_fields_to_file: str = "Write Translated Name Fields to the Translated File"
+    expert_settings_page_write_translated_name_fields_to_file: str = "Write Translated Name Fields to the Output File"
     expert_settings_page_write_translated_name_fields_to_file_desc: str = (
         "In some <font color='darkgoldenrod'><b>GalGame</b></font>, name field data is bound to resource files such as image or voice files"
         "<br>"
@@ -305,10 +305,9 @@ class LocalizerEN(LocalizerZH):
     quality_import_toast: str = "Data imported …"
     quality_export: str = "Export"
     quality_export_toast: str = "Data exported to application root directory …"
-    quality_add: str = "Add"
-    quality_add_toast: str = "New row added …"
     quality_save: str = "Save"
     quality_save_toast: str = "Data saved …"
+    quality_merge_duplication: str = "Duplicate data merged …"
     quality_preset: str = "Preset"
     quality_reset: str = "Reset"
     quality_reset_toast: str = "Data reset …"
@@ -316,7 +315,6 @@ class LocalizerEN(LocalizerZH):
     quality_select_file: str = "Select File"
     quality_select_file_type: str = "Support Format (*.json *.xlsx)"
     quality_delete_row: str = "Delete Row"
-    quality_insert_row: str = "Insert Row"
     quality_switch_regex: str = "Regex Switch"
 
     # 术语表
@@ -474,7 +472,6 @@ class LocalizerEN(LocalizerZH):
         "\n"
         "Hitting one of them is enough to determine that the text needs to be retranslated"
     )
-    re_translation_page_white_list_placeholder: str = "Please enter keywords …"
     re_translation_page_alert_not_equal: str = "The number of lines in the original and translated texts does not match …"
 
     # 百宝箱 - 姓名字段提取
