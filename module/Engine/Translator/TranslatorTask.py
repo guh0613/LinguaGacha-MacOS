@@ -1,24 +1,24 @@
-import time
 import itertools
 import threading
+import time
 from functools import lru_cache
 
 from rich import box
 from rich import markup
-from rich.table import Table
 from rich.console import Console
+from rich.table import Table
 
 from base.Base import Base
 from base.LogManager import LogManager
-from module.Text.TextHelper import TextHelper
 from module.Cache.CacheItem import CacheItem
 from module.Config import Config
 from module.Engine.Engine import Engine
 from module.Engine.TaskRequester import TaskRequester
-from module.Response.ResponseChecker import ResponseChecker
-from module.Response.ResponseDecoder import ResponseDecoder
 from module.Localizer.Localizer import Localizer
 from module.PromptBuilder import PromptBuilder
+from module.Response.ResponseChecker import ResponseChecker
+from module.Response.ResponseDecoder import ResponseDecoder
+from module.Text.TextHelper import TextHelper
 from module.TextProcessor import TextProcessor
 
 class TranslatorTask(Base):
@@ -50,6 +50,10 @@ class TranslatorTask(Base):
 
     # 请求
     def request(self, items: list[CacheItem], processors: list[TextProcessor], precedings: list[CacheItem], local_flag: bool, current_round: int) -> dict[str, str]:
+        # 检测是否需要停止任务
+        if Engine.get().get_status() == Engine.Status.STOPPING:
+            return {}
+
         # 任务开始的时间
         start_time = time.time()
 
@@ -333,9 +337,7 @@ class TranslatorTask(Base):
     @classmethod
     @lru_cache(maxsize = None)
     def get_error_text(cls, error: ResponseChecker.Error) -> str:
-        if error == ResponseChecker.Error.UNKNOWN:
-            return Localizer.get().response_checker_unknown
-        elif error == ResponseChecker.Error.FAIL_DATA:
+        if error == ResponseChecker.Error.FAIL_DATA:
             return Localizer.get().response_checker_fail_data
         elif error == ResponseChecker.Error.FAIL_LINE_COUNT:
             return Localizer.get().response_checker_fail_line_count
@@ -352,4 +354,4 @@ class TranslatorTask(Base):
         elif error == ResponseChecker.Error.LINE_ERROR_DEGRADATION:
             return Localizer.get().response_checker_line_error_degradation
         else:
-            return ""
+            return Localizer.get().response_checker_unknown

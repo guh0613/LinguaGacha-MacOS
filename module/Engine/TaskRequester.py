@@ -25,8 +25,12 @@ class TaskRequester(Base):
     # gemini-2.5-flash
     RE_GEMINI_2_5_FLASH: re.Pattern = re.compile(r"gemini-2\.5-flash", flags = re.IGNORECASE)
 
-    # claude-3-7-sonnet
-    RE_CLAUDE_3_7_SONNET: re.Pattern = re.compile(r"claude-3-7-sonnet", flags = re.IGNORECASE)
+    # Claude
+    RE_CLAUDE: tuple[re.Pattern] = (
+        re.compile(r"claude-3-7-sonnet", flags = re.IGNORECASE),
+        re.compile(r"claude-opus-4-0", flags = re.IGNORECASE),
+        re.compile(r"claude-sonnet-4-0", flags = re.IGNORECASE),
+    )
 
     # o1 o3-mini o4-mini-20240406
     RE_O_SERIES: re.Pattern = re.compile(r"o\d$|o\d-", flags = re.IGNORECASE)
@@ -53,14 +57,20 @@ class TaskRequester(Base):
 
     @classmethod
     def get_key(cls, keys: list[str]) -> str:
-        if len(keys) == 1:
-            return keys[0]
+        key: str = ""
+
+        if len(keys) == 0:
+            key = "no_key_required"
+        elif len(keys) == 1:
+            key = keys[0]
         elif cls.API_KEY_INDEX >= len(keys) - 1:
+            key = keys[0]
             cls.API_KEY_INDEX = 0
-            return keys[0]
         else:
+            key = keys[cls.API_KEY_INDEX]
             cls.API_KEY_INDEX = cls.API_KEY_INDEX + 1
-            return keys[cls.API_KEY_INDEX]
+
+        return key
 
     # 获取客户端
     @classmethod
@@ -75,12 +85,14 @@ class TaskRequester(Base):
             )
         elif format == Base.APIFormat.GOOGLE:
             # https://github.com/googleapis/python-genai
-            # https://ai.google.dev/gemini-api/docs/libraries
             return genai.Client(
                 api_key = key,
                 http_options = types.HttpOptions(
+                    base_url = url,
                     timeout = timeout * 1000,
-                    api_version = "v1alpha",
+                    headers = {
+                        "User-Agent": f"LinguaGacha/{VersionManager.VERSION} (https://github.com/neavo/LinguaGacha)",
+                    },
                 ),
             )
         elif format == Base.APIFormat.ANTHROPIC:
@@ -379,8 +391,8 @@ class TaskRequester(Base):
         args.pop("presence_penalty", None)
         args.pop("frequency_penalty", None)
 
-        # 思考模式切换 - Claude 3.7 Sonnet
-        if __class__.RE_CLAUDE_3_7_SONNET.search(self.platform.get("model")) is not None:
+        # 思考模式切换
+        if any(v.search(self.platform.get("model")) is not None for v in __class__.RE_CLAUDE):
             if thinking == True:
                 args["thinking"] = {
                     "type": "enabled",
