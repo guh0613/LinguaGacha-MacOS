@@ -55,6 +55,7 @@
 - 视频教程
   - [How to Translate RPGMV with LinguaGacha and Translator++ (English)](https://www.youtube.com/watch?v=wtV_IODzi8I)
 - 功能说明
+  - [命令行模式](https://github.com/neavo/LinguaGacha/wiki/CLIMode)
   - [术语表](https://github.com/neavo/LinguaGacha/wiki/Glossary)　　[文本保护](https://github.com/neavo/LinguaGacha/wiki/TextPreserve)　　[文本替换](https://github.com/neavo/LinguaGacha/wiki/Replacement)　　
   - [补充翻译](https://github.com/neavo/LinguaGacha/wiki/IncrementalTranslation)　　[MTool 优化器](https://github.com/neavo/LinguaGacha/wiki/MToolOptimizer)
   - [百宝箱 - 批量修正](https://github.com/neavo/LinguaGacha/wiki/BatchCorrection)　　[百宝箱 - 部分重翻](https://github.com/neavo/LinguaGacha/wiki/ReTranslation)　　[百宝箱 - 姓名字段提取](https://github.com/neavo/LinguaGacha/wiki/NameFieldExtraction)
@@ -75,28 +76,13 @@
 - 具体示例可见 [Wiki - 支持的文件格式](https://github.com/neavo/LinguaGacha/wiki/%E6%94%AF%E6%8C%81%E7%9A%84%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F)，更多格式将持续添加，你也可以在 [ISSUES](https://github.com/neavo/LinguaGacha/issues) 中提出你的需求
 
 ## 近期更新 📅
-- 20250530 v0.28.3
-  - 调整 - 几处细节调整
+- 20250603 v0.29.1
+  - 修正 - 继续任务功能
 
-- 20250530 v0.28.2
-  - 新增 - 自定义 Google 接口
-  - 新增 - 专家设置选项
-    - 清理原文中的注音文本
-    - T++ 项目文件中对重复文本去重
-  - 调整 - 表格搜索时不区分大小写字母
-  - 调整 - 支持 Claude 4 系列模型切换思考模式
-  - 修复 - 尝试修复暂停任务十分缓慢的问题
-  - 修复 - 尝试修复繁体中文输出时的偶发字符错误
-
-- 20250526 v0.28.1
-  - 调整 - 兼容性优化
-
-- 20250522 v0.28.0
-  - 调整 - `文本保护` 与 `结果检查` 逻辑优化
-  - 调整 - `任务暂停` 与 `生成任务` 的速度优化
-  - 调整 - `术语表` `文本保护` `文本替换` 交互细节优化：
-    - 去重逻辑优化
-    - 表格支持应用内搜索
+- 20250602 v0.29.0
+  - 新增 - [命令行模式](https://github.com/neavo/LinguaGacha/wiki/CLIMode)
+  - 调整 - 更准确的请求超时时间控制
+  - 调整 - 接口测试时打印失败的密钥
 
 ## 常见问题 📥
 - [LinguaGacha](https://github.com/neavo/LinguaGacha) 与 [AiNiee](https://github.com/NEKOparapa/AiNiee) 的关系

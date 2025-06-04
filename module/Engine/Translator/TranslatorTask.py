@@ -3,9 +3,9 @@ import threading
 import time
 from functools import lru_cache
 
+import rich
 from rich import box
 from rich import markup
-from rich.console import Console
 from rich.table import Table
 
 from base.Base import Base
@@ -23,11 +23,8 @@ from module.TextProcessor import TextProcessor
 
 class TranslatorTask(Base):
 
-    # 类变量
-    CONSOLE = Console(highlight = True, tab_size = 4)
-
     # 自动术语表
-    GLOSSARY_SAVE_LOCK = threading.Lock()
+    GLOSSARY_SAVE_LOCK: threading.Lock = threading.Lock()
     GLOSSARY_SAVE_TIME: float = time.time()
     GLOSSARY_SAVE_INTERVAL: int = 15
 
@@ -120,7 +117,7 @@ class TranslatorTask(Base):
             console_log.append(Localizer.get().translator_task_response_think + response_think)
         if response_result != "":
             file_log.append(Localizer.get().translator_task_response_result + response_result)
-            console_log.append(Localizer.get().translator_task_response_result + response_result) if LogManager.is_expert_mode() else None
+            console_log.append(Localizer.get().translator_task_response_result + response_result) if LogManager.get().is_expert_mode() else None
 
         # 如果有任何正确的条目，则处理结果
         updated_count = 0
@@ -282,14 +279,16 @@ class TranslatorTask(Base):
 
         # 根据线程数判断是否需要打印表格
         if Engine.get().get_running_task_count() > 32:
-            log_func(
-                Localizer.get().translator_too_many_task + "\n" + message + "\n",
-                file = False,
-                console = True,
+            rich.get_console().print(
+                Localizer.get().translator_too_many_task + "\n" + message + "\n"
             )
         else:
-            console_rows = self.generate_log_rows(srcs, dsts, console_log, console = True)
-            __class__.CONSOLE.print(self.generate_log_table(console_rows, style))
+            rich.get_console().print(
+                self.generate_log_table(
+                    self.generate_log_rows(srcs, dsts, console_log, console = True),
+                    style,
+                )
+            )
 
     # 生成日志行
     def generate_log_rows(self, srcs: list[str], dsts: list[str], extra: list[str], console: bool) -> tuple[list[str], str]:
